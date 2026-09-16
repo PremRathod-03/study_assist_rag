@@ -68,6 +68,7 @@ def ingest_single_file(subject_name: str, file_path: str) -> int:
         )
         added += 1
 
+    _rebuild_bm25_index(subject_name)
     print(f"  Added {added} chunks from {filename}.")
     return added
 
@@ -92,3 +93,75 @@ def ingest_subject(subject_name: str):
 
 if __name__ == "__main__":
     ingest_subject("reinforcement_learning")
+
+
+def ingest_single_file_streaming(subject_name: str, file_path: str):
+    """
+    Same as ingest_single_file, but yields a progress dict after each
+    chunk instead of returning only at the end - lets a caller (like
+    the API) stream live status to a frontend.
+    """
+    filename = os.path.basename(file_path)
+    collection = chroma_client.get_or_create_collection(
+        name=subject_name, embedding_function=embedding_function
+    )
+
+    if _file_already_ingested(collection, filename):
+        yield {"status": "skipped", "message": f"{filename} already ingested."}
+        return
+
+    yield {"status": "loading", "message": f"Loading {filename}..."}
+    pages = load_file(file_path)
+    chunks = chunk_pages(pages)
+    full_document_text = "\n".join(p["text"] for p in pages if p.get("text"))
+    existing_count = collection.count()
+
+    for i, chunk in enumerate(chunks):
+        enriched_text = add_context(full_document_text, chunk["text"])
+        unique_id = f"{filename}_{existing_count + i}"
+        collection.add(
+            ids=[unique_id],
+            documents=[enriched_text],
+            metadatas=[{
+                "source_file": filename,
+                "source_type": chunk["source_type"],
+                "page": chunk["page"],
+            }],
+        )
+        yield {
+            "status": "progress",
+            "current": i + 1,
+            "total": len(chunks),
+            "message": f"Enriched chunk {i + 1}/{len(chunks)}",
+        }
+
+    _rebuild_bm25_index(subject_name)
+    yield {"status": "done", "message": f"Added {len(chunks)} chunks from {filename}.", "chunks_added": len(chunks)}
+
+
+def _rebuild_bm25_index(subject_name: str):
+    """
+    Rebuilds the BM25 keyword-search index for a subject from whatever
+    is currently in its Chroma collection. Called after every ingestion
+    so hybrid_search always has an up-to-date index to read - cheap to
+    do since it's just reading existing data, no LLM calls involved.
+    """
+    import pickle
+    from rank_bm25 import BM25Okapi
+
+    os.makedirs("bm25_index", exist_ok=True)
+    collection = chroma_client.get_or_create_collection(
+        name=subject_name, embedding_function=embedding_function
+    )
+    data = collection.get()
+    ids = data["ids"]
+    documents = data["documents"]
+
+    if not documents:
+        return
+
+    tokenized_docs = [doc.lower().split() for doc in documents]
+    bm25 = BM25Okapi(tokenized_docs)
+
+    with open(f"bm25_index/{subject_name}.pkl", "wb") as f:
+        pickle.dump((bm25, ids), f)
