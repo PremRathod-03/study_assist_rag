@@ -165,3 +165,49 @@ def _rebuild_bm25_index(subject_name: str):
 
     with open(f"bm25_index/{subject_name}.pkl", "wb") as f:
         pickle.dump((bm25, ids), f)
+
+
+def ingest_single_pyq(subject_name: str, file_path: str) -> int:
+    """
+    Same as ingest_single_file, but stores into a SEPARATE collection
+    named "<subject>_pyqs" instead of the subject's main notes collection.
+    This keeps past-year questions distinct from lecture notes, so
+    paper_gen.py can specifically pull PYQs for style reference without
+    mixing them into regular note retrieval.
+    """
+    pyq_collection_name = f"{subject_name}_pyqs"
+    filename = os.path.basename(file_path)
+
+    collection = chroma_client.get_or_create_collection(
+        name=pyq_collection_name,
+        embedding_function=embedding_function,
+    )
+
+    if _file_already_ingested(collection, filename):
+        print(f"  Skipping {filename} - already ingested for {pyq_collection_name}.")
+        return 0
+
+    print(f"Loading PYQ file {filename}...")
+    pages = load_file(file_path)
+    chunks = chunk_pages(pages)
+    # PYQs don't need contextual enrichment the way notes do - they're
+    # short, self-contained questions, not explanatory prose that loses
+    # meaning out of context. Skipping enrichment here saves LLM calls.
+    existing_count = collection.count()
+
+    added = 0
+    for i, chunk in enumerate(chunks):
+        unique_id = f"{filename}_{existing_count + i}"
+        collection.add(
+            ids=[unique_id],
+            documents=[chunk["text"]],
+            metadatas=[{
+                "source_file": filename,
+                "source_type": chunk["source_type"],
+                "page": chunk["page"],
+            }],
+        )
+        added += 1
+
+    print(f"  Added {added} PYQ chunks from {filename}.")
+    return added
