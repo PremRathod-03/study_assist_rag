@@ -39,4 +39,6 @@ its own later. Answer with ONLY the blurb, nothing else."""
     )
 
     context_blurb = response.choices[0].message.content.strip()
+    from app.usage_tracker import log_usage
+    log_usage("_enrichment", "enrich_chunk", response.usage.prompt_tokens, response.usage.completion_tokens)
     return f"{context_blurb}\n\n{chunk_text}"

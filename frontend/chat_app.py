@@ -62,9 +62,10 @@ with gr.Blocks(title="Study Assistant") as demo:
     gr.Markdown("# Study Assistant")
 
     with gr.Tab("Chat"):
+        available_subjects = get_subjects()
         subject_dropdown = gr.Dropdown(
-            choices=get_subjects(),
-            value=get_subjects()[0],
+            choices=available_subjects,
+            value=available_subjects[0],
             label="Subject",
         )
         refresh_button = gr.Button("Refresh Subjects")

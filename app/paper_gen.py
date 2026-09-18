@@ -70,4 +70,6 @@ Base the question content on this syllabus material:
         messages=[{"role": "user", "content": prompt}],
         max_tokens=1500,
     )
+    from app.usage_tracker import log_usage
+    log_usage(subject, "generate_paper", response.usage.prompt_tokens, response.usage.completion_tokens)
     return response.choices[0].message.content.strip()

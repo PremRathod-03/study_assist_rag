@@ -48,4 +48,6 @@ Context:
         messages=[{"role": "user", "content": prompt}],
         max_tokens=1200,
     )
+    from app.usage_tracker import log_usage
+    log_usage(subject, "generate_questions", response.usage.prompt_tokens, response.usage.completion_tokens)
     return response.choices[0].message.content.strip()

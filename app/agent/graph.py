@@ -132,6 +132,8 @@ Question: {state['original_question']}"""
         messages=[{"role": "user", "content": prompt}],
         max_tokens=800,
     )
+    from app.usage_tracker import log_usage
+    log_usage(state["subject"], "ask", response.usage.prompt_tokens, response.usage.completion_tokens)
     state["final_answer"] = response.choices[0].message.content.strip()
     return state
 
