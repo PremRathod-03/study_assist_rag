@@ -67,3 +67,23 @@ def confirm_ingest(temp_path: str = Form(...), subject: str = Form(...)):
             yield json.dumps(update) + "\n"
 
     return StreamingResponse(event_stream(), media_type="application/x-ndjson")
+
+
+@app.post("/upload-pyq")
+def upload_pyq(subject: str = Form(...), file: UploadFile = File(...)):
+    """
+    Uploads a past-year question paper for a given subject, directly
+    into that subject's separate PYQ collection. Unlike notes upload,
+    this skips subject auto-detection - the user picks the subject
+    explicitly, since PYQs are always uploaded for a subject you
+    already have (no auto-detect ambiguity needed here).
+    """
+    import shutil
+    os.makedirs("data/pyqs_tmp", exist_ok=True)
+    temp_path = f"data/pyqs_tmp/{file.filename}"
+    with open(temp_path, "wb") as f:
+        shutil.copyfileobj(file.file, f)
+
+    from app.ingest import ingest_single_pyq
+    added = ingest_single_pyq(subject, temp_path)
+    return {"subject": subject, "chunks_added": added}
