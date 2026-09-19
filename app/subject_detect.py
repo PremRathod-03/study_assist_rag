@@ -1,4 +1,5 @@
 import os
+import difflib
 from groq import Groq
 from dotenv import load_dotenv
 
@@ -11,8 +12,13 @@ def detect_subject(file_text: str, existing_subjects: list[str]) -> str:
     """
     Looks at a snippet of an uploaded file's text and guesses which
     subject it belongs to. Prefers matching an existing subject over
-    inventing a new one, unless it genuinely doesn't fit any of them.
-    Returns a subject name as a lowercase_underscore string.
+    inventing a new one.
+
+    Uses fuzzy string matching as a safety net: the LLM's raw guess
+    might not exactly match an existing subject's string (e.g. it says
+    "reinforcement_learning_notes" instead of "reinforcement_learning"),
+    so we snap close guesses to the real existing name rather than
+    treating near-matches as brand new subjects.
     """
     existing_list = ", ".join(existing_subjects) if existing_subjects else "(none yet)"
 
@@ -24,9 +30,9 @@ def detect_subject(file_text: str, existing_subjects: list[str]) -> str:
 Existing subjects already in the system: {existing_list}
 
 Which subject does this file belong to? If it clearly matches one of
-the existing subjects, respond with that EXACT existing name. If it
-doesn't match any, suggest a new subject name in lowercase_underscore
-format (e.g. "big_data_analytics").
+the existing subjects, respond with that EXACT existing name, character
+for character. If it doesn't match any, suggest a new subject name in
+lowercase_underscore format (e.g. "big_data_analytics").
 
 Respond with ONLY the subject name, nothing else."""
 
@@ -35,6 +41,15 @@ Respond with ONLY the subject name, nothing else."""
         messages=[{"role": "user", "content": prompt}],
         max_tokens=500,
     )
-    guess = response.choices[0].message.content.strip().lower()
-    guess = guess.replace(" ", "_").strip('"').strip("'")
-    return guess
+    raw_guess = response.choices[0].message.content.strip().lower()
+    raw_guess = raw_guess.replace(" ", "_").strip('"').strip("'")
+
+    # Fuzzy-match safety net: if the raw guess is close enough to an
+    # existing subject, use the REAL existing name instead of the LLM's
+    # possibly-slightly-off version of it.
+    if existing_subjects:
+        close_matches = difflib.get_close_matches(raw_guess, existing_subjects, n=1, cutoff=0.6)
+        if close_matches:
+            return close_matches[0]
+
+    return raw_guess

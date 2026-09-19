@@ -1,43 +1,31 @@
 import json
 import requests
-import gradio as gr
+import streamlit as st
 
 API = "http://127.0.0.1:8000"
+ANALYTICS_PORT = 8501
+MAX_FILES = 5
+NEW_SUBJECT_OPTION = "+ Create new subject..."
+
+st.set_page_config(page_title="Study Assistant", layout="wide")
 
 
 def get_subjects():
     response = requests.get(f"{API}/subjects")
-    subjects = response.json()["subjects"]
-    return subjects if subjects else ["reinforcement_learning"]
+    return response.json()["subjects"]
 
 
-def respond(message, history, subject):
-    response = requests.get(
-        f"{API}/ask",
-        params={"subject": subject, "question": message},
-    )
+def ask_question(subject, question):
+    response = requests.get(f"{API}/ask", params={"subject": subject, "question": question})
     return response.json()["answer"]
 
 
-def handle_upload(file):
-    if file is None:
-        return "No file selected.", "", ""
-
-    with open(file, "rb") as f:
-        response = requests.post(f"{API}/detect-subject", files={"file": f})
-    data = response.json()
-    guess = data["guessed_subject"]
-    temp_path = data["temp_path"]
-
-    message = f"Detected subject: **{guess}**\n\nEdit below if wrong, then click Confirm & Add."
-    return message, guess, temp_path
+def detect_subject_for_file(uploaded_file):
+    response = requests.post(f"{API}/detect-subject", files={"file": uploaded_file})
+    return response.json()
 
 
-def handle_confirm(subject, temp_path):
-    if not temp_path:
-        yield "Upload a file first."
-        return
-
+def confirm_and_ingest_streaming(temp_path, subject, status_box):
     with requests.post(
         f"{API}/confirm-ingest",
         data={"temp_path": temp_path, "subject": subject},
@@ -47,90 +35,145 @@ def handle_confirm(subject, temp_path):
             if not line:
                 continue
             update = json.loads(line)
-
             if update["status"] == "loading":
-                yield update["message"]
+                status_box.update(label=update["message"])
             elif update["status"] == "progress":
-                yield f"Ingesting... {update['current']}/{update['total']} chunks ({update['message']})"
-            elif update["status"] == "skipped":
-                yield f"already ingested: {update['message']}"
-            elif update["status"] == "done":
-                yield f"done: {update['message']} Go to the Chat tab and click Refresh Subjects."
+                status_box.write(f"Enriching chunk {update['current']}/{update['total']}")
+            elif update["status"] in ("skipped", "done"):
+                status_box.update(label=update["message"], state="complete")
+                return update["message"]
 
 
-def handle_pyq_upload(file, subject):
-    if file is None:
-        return "No file selected."
-    if not subject:
-        return "Pick a subject first."
+with st.sidebar:
+    st.markdown("### Subjects")
+    subjects = get_subjects()
+    if "active_subject" not in st.session_state:
+        st.session_state.active_subject = subjects[0] if subjects else None
 
-    with open(file, "rb") as f:
-        response = requests.post(
-            f"{API}/upload-pyq",
-            data={"subject": subject},
-            files={"file": f},
+    for subject in subjects:
+        if st.button(subject, use_container_width=True, key=f"subj_{subject}"):
+            st.session_state.active_subject = subject
+
+    if st.button("Refresh Subjects", use_container_width=True):
+        st.rerun()
+
+    st.markdown("---")
+    st.caption("**To add a new subject:** attach a file (or up to 5) using the + icon below. New subjects are detected automatically.")
+
+active = st.session_state.active_subject
+st.markdown(f"## {active or 'No subject selected'}")
+
+btn_col1, btn_col2, btn_col3 = st.columns(3)
+with btn_col1:
+    gen_questions_clicked = st.button("Questions", use_container_width=True)
+with btn_col2:
+    gen_paper_clicked = st.button("Paper", use_container_width=True)
+with btn_col3:
+    analytics_link = f"http://localhost:{ANALYTICS_PORT}/?subject={active}" if active else f"http://localhost:{ANALYTICS_PORT}"
+    st.link_button("Analytics", analytics_link, use_container_width=True)
+
+if gen_questions_clicked:
+    st.session_state.show_question_form = True
+if st.session_state.get("show_question_form"):
+    with st.expander("Generate Practice Questions", expanded=True):
+        topic = st.text_input("Topic", key="qgen_topic")
+        marks = st.number_input("Marks per question", value=5, key="qgen_marks")
+        count = st.number_input("Number of questions", value=3, key="qgen_count")
+        if st.button("Generate", key="qgen_submit"):
+            with st.spinner("Generating..."):
+                response = requests.get(
+                    f"{API}/generate-questions",
+                    params={"subject": active, "topic": topic, "marks": marks, "count": count},
+                )
+                st.markdown(response.json()["questions"])
+
+if gen_paper_clicked:
+    st.session_state.show_paper_form = True
+if st.session_state.get("show_paper_form"):
+    with st.expander("Generate Sample Paper", expanded=True):
+        exam_type = st.selectbox("Exam type", ["internals", "end_sem"], key="paper_exam_type")
+        if st.button("Generate", key="paper_submit"):
+            with st.spinner("Generating full paper (this can take a minute)..."):
+                response = requests.get(
+                    f"{API}/generate-paper",
+                    params={"subject": active, "exam_type": exam_type},
+                )
+                st.markdown(response.json()["paper"])
+
+st.markdown("---")
+
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
+
+if "pending_uploads" not in st.session_state:
+    st.session_state.pending_uploads = []
+
+for i, pending in enumerate(list(st.session_state.pending_uploads)):
+    with st.chat_message("assistant"):
+        st.markdown(f"**{pending['filename']}** - detected subject: **{pending['guessed_subject']}**")
+
+        options = subjects + [NEW_SUBJECT_OPTION]
+        default_index = options.index(pending["guessed_subject"]) if pending["guessed_subject"] in subjects else len(subjects)
+
+        chosen = st.selectbox(
+            "Confirm the subject:",
+            options,
+            index=default_index,
+            key=f"confirm_subject_select_{i}",
         )
-    data = response.json()
-    return f"Added {data['chunks_added']} PYQ chunks to {data['subject']}."
 
+        if chosen == NEW_SUBJECT_OPTION:
+            final_subject = st.text_input(
+                "New subject name:",
+                value=pending["guessed_subject"],
+                key=f"confirm_subject_input_{i}",
+            )
+        else:
+            final_subject = chosen
 
-with gr.Blocks(title="Study Assistant") as demo:
-    gr.Markdown("# Study Assistant")
+        if st.button("Confirm & Add to Knowledge Base", key=f"confirm_ingest_btn_{i}"):
+            with st.status(f"Adding {pending['filename']} to {final_subject}...", expanded=True) as status_box:
+                result = confirm_and_ingest_streaming(pending["temp_path"], final_subject, status_box)
+            st.session_state.messages.append({"role": "assistant", "content": result})
+            st.session_state.pending_uploads.pop(i)
+            st.rerun()
 
-    with gr.Tab("Chat"):
-        available_subjects = get_subjects()
-        subject_dropdown = gr.Dropdown(
-            choices=available_subjects,
-            value=available_subjects[0],
-            label="Subject",
-        )
-        refresh_button = gr.Button("Refresh Subjects")
-        refresh_button.click(fn=get_subjects, outputs=[subject_dropdown])
+prompt = st.chat_input(
+    "Ask a question, or attach up to 5 files to add/grow a subject...",
+    accept_file="multiple",
+    file_type=["pdf", "pptx", "docx"],
+)
 
-        gr.ChatInterface(fn=respond, additional_inputs=[subject_dropdown])
+if prompt:
+    if prompt.files:
+        files_to_process = prompt.files[:MAX_FILES]
+        if len(prompt.files) > MAX_FILES:
+            st.warning(f"Only the first {MAX_FILES} files were processed (limit reached).")
 
-    with gr.Tab("Upload Notes"):
-        gr.Markdown("Upload a PDF, PPTX, or DOCX. We will guess the subject - confirm or correct it before it is added.")
+        for uploaded_file in files_to_process:
+            st.session_state.messages.append({"role": "user", "content": f"Uploaded: {uploaded_file.name}"})
+            detection = detect_subject_for_file(uploaded_file)
+            st.session_state.pending_uploads.append({
+                "filename": uploaded_file.name,
+                "guessed_subject": detection["guessed_subject"],
+                "temp_path": detection["temp_path"],
+            })
+        st.rerun()
 
-        file_input = gr.File(label="Upload file", file_types=[".pdf", ".pptx", ".docx"])
-        detect_button = gr.Button("Detect Subject")
-        detect_output = gr.Markdown()
+    elif prompt.text:
+        st.session_state.messages.append({"role": "user", "content": prompt.text})
+        with st.chat_message("user"):
+            st.markdown(prompt.text)
 
-        confirm_subject = gr.Textbox(label="Subject (edit if wrong)", visible=True)
-        temp_path_state = gr.State("")
-        confirm_button = gr.Button("Confirm and Add")
-        confirm_output = gr.Markdown()
-
-        detect_button.click(
-            fn=handle_upload,
-            inputs=[file_input],
-            outputs=[detect_output, confirm_subject, temp_path_state],
-        )
-        confirm_button.click(
-            fn=handle_confirm,
-            inputs=[confirm_subject, temp_path_state],
-            outputs=[confirm_output],
-        )
-
-    with gr.Tab("Past Papers"):
-        gr.Markdown("Upload a past-year question paper (PDF, PPTX, or DOCX) for an existing subject. This is used as a style reference when generating new sample papers.")
-
-        pyq_subject_dropdown = gr.Dropdown(
-            choices=get_subjects(),
-            label="Subject",
-        )
-        pyq_refresh_button = gr.Button("Refresh Subjects")
-        pyq_refresh_button.click(fn=get_subjects, outputs=[pyq_subject_dropdown])
-
-        pyq_file_input = gr.File(label="Upload past paper", file_types=[".pdf", ".pptx", ".docx"])
-        pyq_upload_button = gr.Button("Add Past Paper")
-        pyq_output = gr.Markdown()
-
-        pyq_upload_button.click(
-            fn=handle_pyq_upload,
-            inputs=[pyq_file_input, pyq_subject_dropdown],
-            outputs=[pyq_output],
-        )
-
-if __name__ == "__main__":
-    demo.launch()
+        with st.chat_message("assistant"):
+            if not active:
+                answer = "Pick a subject from the sidebar first."
+            else:
+                with st.spinner("Thinking..."):
+                    answer = ask_question(active, prompt.text)
+            st.markdown(answer)
+        st.session_state.messages.append({"role": "assistant", "content": answer})

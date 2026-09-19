@@ -1,12 +1,5 @@
-import os
-from groq import Groq
-from dotenv import load_dotenv
-
-# Loads GROQ_API_KEY from your .env file into the environment
-# so we don't hardcode the key anywhere in this file.
-load_dotenv()
-
-client = Groq(api_key=os.environ["GROQ_API_KEY"])
+from app.groq_pool import get_client_with_capacity, record_usage, estimate_tokens
+from app.usage_tracker import log_usage
 
 
 def add_context(full_document_text: str, chunk_text: str) -> str:
@@ -15,6 +8,9 @@ def add_context(full_document_text: str, chunk_text: str) -> str:
     the LLM to write a short 1-2 sentence blurb situating that chunk
     within the document - so the chunk makes sense retrieved on its own,
     without needing the surrounding text around it.
+
+    Uses a pool of Groq API keys (see app/groq_pool.py) so multiple
+    accounts' rate limits combine into one larger effective budget.
 
     Returns the chunk with that blurb stuck in front of it.
     """
@@ -32,13 +28,17 @@ Write a 1-2 sentence context blurb that situates this chunk within the
 overall document, to help it be understood correctly when retrieved on
 its own later. Answer with ONLY the blurb, nothing else."""
 
+    estimated = estimate_tokens(prompt) + 400
+    client, key_index = get_client_with_capacity(estimated)
+
     response = client.chat.completions.create(
         model="openai/gpt-oss-20b",
         messages=[{"role": "user", "content": prompt}],
         max_tokens=400,
     )
 
-    context_blurb = response.choices[0].message.content.strip()
-    from app.usage_tracker import log_usage
+    record_usage(key_index, response.usage.total_tokens)
     log_usage("_enrichment", "enrich_chunk", response.usage.prompt_tokens, response.usage.completion_tokens)
+
+    context_blurb = response.choices[0].message.content.strip()
     return f"{context_blurb}\n\n{chunk_text}"

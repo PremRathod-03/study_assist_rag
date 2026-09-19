@@ -4,9 +4,7 @@ import altair as alt
 import streamlit as st
 
 st.set_page_config(page_title="Usage Analytics", layout="wide")
-st.title("Study Assistant - Usage Analytics")
 
-# One consistent color palette used across every chart on this page
 PALETTE = ["#6366F1", "#22C55E", "#F59E0B", "#EC4899", "#14B8A6", "#8B5CF6", "#EF4444"]
 
 
@@ -22,10 +20,27 @@ def load_usage_log():
     return pd.DataFrame(records)
 
 
-df = load_usage_log()
+df_all = load_usage_log()
+
+# Read ?subject=... from the URL, if the chat page linked here with one
+url_subject = st.query_params.get("subject", None)
+
+st.title("Study Assistant - Usage Analytics")
+
+view = st.radio(
+    "View",
+    ["All Subjects", "This Subject"] if url_subject else ["All Subjects"],
+    horizontal=True,
+)
+
+if view == "This Subject" and url_subject:
+    df = df_all[df_all["subject"] == url_subject]
+    st.caption(f"Showing usage for: **{url_subject}**")
+else:
+    df = df_all
 
 if df.empty:
-    st.info("No usage data yet. Ask a few questions or generate some content first.")
+    st.info("No usage data yet for this view.")
 else:
     total_calls = len(df)
     total_tokens = int(df["total_tokens"].sum())
@@ -38,20 +53,21 @@ else:
     col3.metric("Prompt Tokens", f"{total_prompt:,}")
     col4.metric("Completion Tokens", f"{total_completion:,}")
 
-    st.subheader("Tokens by Subject")
-    by_subject = df.groupby("subject", as_index=False)["total_tokens"].sum()
-    chart1 = (
-        alt.Chart(by_subject)
-        .mark_bar()
-        .encode(
-            x=alt.X("subject:N", title="Subject", sort="-y", axis=alt.Axis(labelLimit=200, labelAngle=-30)),
-            y=alt.Y("total_tokens:Q", title="Total Tokens"),
-            color=alt.Color("subject:N", scale=alt.Scale(range=PALETTE), legend=None),
-            tooltip=["subject", "total_tokens"],
+    if view == "All Subjects":
+        st.subheader("Tokens by Subject")
+        by_subject = df.groupby("subject", as_index=False)["total_tokens"].sum()
+        chart1 = (
+            alt.Chart(by_subject)
+            .mark_bar()
+            .encode(
+                x=alt.X("subject:N", title="Subject", sort="-y", axis=alt.Axis(labelLimit=200, labelAngle=-30)),
+                y=alt.Y("total_tokens:Q", title="Total Tokens"),
+                color=alt.Color("subject:N", scale=alt.Scale(range=PALETTE), legend=None),
+                tooltip=["subject", "total_tokens"],
+            )
+            .properties(height=350)
         )
-        .properties(height=350)
-    )
-    st.altair_chart(chart1, use_container_width=True)
+        st.altair_chart(chart1, use_container_width=True)
 
     st.subheader("Tokens by Operation Type")
     by_operation = df.groupby("operation", as_index=False)["total_tokens"].sum()
