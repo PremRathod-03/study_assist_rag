@@ -1,20 +1,15 @@
-import os
-from groq import Groq
-from dotenv import load_dotenv
-import chromadb
-from chromadb.utils import embedding_functions
-
 from app.retrieval.hybrid import hybrid_search
 from app.retrieval.rerank import rerank
-
-load_dotenv()
-client = Groq(api_key=os.environ["GROQ_API_KEY"])
-MODEL = "openai/gpt-oss-20b"
+from app.groq_pool import call_with_pool, estimate_tokens
+from app.usage_tracker import log_usage
+import chromadb
+from chromadb.utils import embedding_functions
 
 embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(
     model_name="BAAI/bge-small-en-v1.5"
 )
 chroma_client = chromadb.PersistentClient(path="vectorstore")
+MODEL = "openai/gpt-oss-20b"
 
 
 def generate_questions(subject: str, topic: str, marks: int = 10, count: int = 5) -> str:
@@ -43,11 +38,13 @@ Number each question.
 Context:
 {context}"""
 
-    response = client.chat.completions.create(
-        model=MODEL,
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=1200,
+    response = call_with_pool(
+        lambda c: c.chat.completions.create(
+            model=MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=1200,
+        ),
+        estimate_tokens(prompt) + 1200,
     )
-    from app.usage_tracker import log_usage
     log_usage(subject, "generate_questions", response.usage.prompt_tokens, response.usage.completion_tokens)
     return response.choices[0].message.content.strip()

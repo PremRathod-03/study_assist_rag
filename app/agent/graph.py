@@ -1,11 +1,11 @@
 import os
 from typing import TypedDict
 from langgraph.graph import StateGraph, END
-from groq import Groq
 from dotenv import load_dotenv
+from app.groq_pool import call_with_pool, estimate_tokens
+from app.usage_tracker import log_usage
 
 load_dotenv()
-client = Groq(api_key=os.environ["GROQ_API_KEY"])
 
 # Remember: gpt-oss models spend tokens on internal reasoning before
 # writing the visible answer, so max_tokens needs to stay generous
@@ -41,10 +41,13 @@ If yes, list each sub-question on its own line, nothing else.
 If no, just repeat the original question unchanged, as a single line.
 Do not add numbering, explanation, or commentary."""
 
-    response = client.chat.completions.create(
-        model=MODEL,
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=500,
+    response = call_with_pool(
+        lambda c: c.chat.completions.create(
+            model=MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=500,
+        ),
+        estimate_tokens(prompt) + 500,
     )
     raw = response.choices[0].message.content.strip()
     state["sub_queries"] = [q.strip() for q in raw.split("\n") if q.strip()]
@@ -97,10 +100,13 @@ Question: {state['original_question']}
 Does the context above contain enough information to answer this
 question well? Answer with exactly one word: YES or NO."""
 
-    response = client.chat.completions.create(
-        model=MODEL,
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=300,
+    response = call_with_pool(
+        lambda c: c.chat.completions.create(
+            model=MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=300,
+        ),
+        estimate_tokens(prompt) + 300,
     )
     answer = response.choices[0].message.content.strip().upper()
     sufficient = "YES" in answer
@@ -127,12 +133,14 @@ Context:
 
 Question: {state['original_question']}"""
 
-    response = client.chat.completions.create(
-        model=MODEL,
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=800,
+    response = call_with_pool(
+        lambda c: c.chat.completions.create(
+            model=MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=800,
+        ),
+        estimate_tokens(prompt) + 800,
     )
-    from app.usage_tracker import log_usage
     log_usage(state["subject"], "ask", response.usage.prompt_tokens, response.usage.completion_tokens)
     state["final_answer"] = response.choices[0].message.content.strip()
     return state

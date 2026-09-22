@@ -1,0 +1,875 @@
+[
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is reinforcement learning?",
+        "expected_keywords": ["agent", "environment", "trial and error", "reward"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What are the main elements of reinforcement learning?",
+        "expected_keywords": ["agent", "environment", "policy", "reward", "state"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is a policy in reinforcement learning?",
+        "expected_keywords": ["policy", "state", "action", "mapping"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is a reward signal?",
+        "expected_keywords": ["reward", "goal", "feedback", "environment"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is a value function?",
+        "expected_keywords": ["value function", "long-term", "state", "future reward"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the difference between a reward and a value function?",
+        "expected_keywords": ["immediate", "long-term", "reward", "value"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the exploration-exploitation tradeoff?",
+        "expected_keywords": ["exploration", "exploitation", "reward", "tradeoff"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the n-armed bandit problem?",
+        "expected_keywords": ["bandit", "actions", "rewards", "unknown"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the epsilon-greedy action selection method?",
+        "expected_keywords": ["epsilon", "exploration", "exploitation", "random"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is optimistic initial values?",
+        "expected_keywords": ["initial", "optimistic", "exploration", "action values"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the Upper Confidence Bound (UCB) strategy?",
+        "expected_keywords": ["confidence", "exploration", "uncertainty", "action value"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What are gradient bandits?",
+        "expected_keywords": ["gradient", "preferences", "actions", "reward"]
+    },
+
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the agent-environment interface?",
+        "expected_keywords": ["agent", "environment", "state", "action", "reward"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the Markov Property?",
+        "expected_keywords": ["Markov", "present state", "future", "history"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is a Markov Decision Process (MDP)?",
+        "expected_keywords": ["MDP", "states", "actions", "rewards", "Markov"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is a deterministic policy?",
+        "expected_keywords": ["deterministic", "state", "action", "same"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is a stochastic policy?",
+        "expected_keywords": ["stochastic", "probability", "action", "state"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the discount factor?",
+        "expected_keywords": ["discount", "gamma", "future", "reward"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the state-value function?",
+        "expected_keywords": ["state-value", "V(s)", "expected return", "policy"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the action-value function?",
+        "expected_keywords": ["action-value", "Q(s,a)", "action", "expected return"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the Bellman equation?",
+        "expected_keywords": ["Bellman", "value", "reward", "future", "state"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the Bellman optimality equation?",
+        "expected_keywords": ["Bellman", "optimal", "maximum", "value", "action"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is policy evaluation?",
+        "expected_keywords": ["policy evaluation", "value function", "fixed policy", "Bellman"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is policy improvement?",
+        "expected_keywords": ["policy improvement", "greedy", "value", "action"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is policy iteration?",
+        "expected_keywords": ["policy iteration", "policy evaluation", "policy improvement", "optimal"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is value iteration?",
+        "expected_keywords": ["value iteration", "Bellman", "optimal", "value function"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is asynchronous dynamic programming?",
+        "expected_keywords": ["asynchronous", "dynamic programming", "state", "updates"]
+    },
+
+    {
+        "subject": "reinforcement_learning",
+        "question": "What are Monte Carlo methods in reinforcement learning?",
+        "expected_keywords": ["Monte Carlo", "experience", "episodes", "return"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "How does Monte Carlo prediction estimate a value function?",
+        "expected_keywords": ["Monte Carlo", "episodes", "return", "average"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the difference between Dynamic Programming and Monte Carlo methods?",
+        "expected_keywords": ["Dynamic Programming", "Monte Carlo", "model", "experience"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is Monte Carlo control?",
+        "expected_keywords": ["Monte Carlo", "control", "action values", "policy"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is Temporal-Difference (TD) learning?",
+        "expected_keywords": ["TD", "learning", "value", "bootstrapping"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the TD error?",
+        "expected_keywords": ["TD error", "reward", "value", "difference"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is TD(0)?",
+        "expected_keywords": ["TD(0)", "one-step", "bootstrapping", "value"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What are the advantages of Temporal-Difference learning?",
+        "expected_keywords": ["online", "incremental", "bootstrapping", "episode"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is SARSA?",
+        "expected_keywords": ["SARSA", "state", "action", "reward", "on-policy"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the SARSA update rule?",
+        "expected_keywords": ["SARSA", "Q-value", "reward", "gamma", "learning rate"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is Q-learning?",
+        "expected_keywords": ["Q-learning", "off-policy", "Q-value", "optimal"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the difference between SARSA and Q-learning?",
+        "expected_keywords": ["SARSA", "Q-learning", "on-policy", "off-policy"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the Q-learning update rule?",
+        "expected_keywords": ["Q-learning", "reward", "maximum", "Q-value", "gamma"]
+    },
+
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is deep reinforcement learning?",
+        "expected_keywords": ["deep reinforcement learning", "neural networks", "reinforcement learning", "trial and error"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "Why is deep learning used in reinforcement learning?",
+        "expected_keywords": ["deep learning", "neural networks", "high-dimensional", "features"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the difference between traditional reinforcement learning and deep reinforcement learning?",
+        "expected_keywords": ["Q-table", "neural network", "state space", "generalization"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the temporal credit assignment problem?",
+        "expected_keywords": ["temporal", "credit assignment", "state", "action", "reward"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is a Deep Q-Network (DQN)?",
+        "expected_keywords": ["DQN", "deep neural network", "Q-value", "Q-learning"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "Why are target networks used in DQN?",
+        "expected_keywords": ["target network", "stability", "Q-value", "weights"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is experience replay in DQN?",
+        "expected_keywords": ["experience replay", "replay buffer", "correlation", "sampling"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What are policy gradient methods?",
+        "expected_keywords": ["policy gradient", "policy", "parameters", "gradient"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the REINFORCE algorithm?",
+        "expected_keywords": ["REINFORCE", "policy gradient", "return", "policy"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What are actor-critic methods?",
+        "expected_keywords": ["actor", "critic", "policy", "value", "TD error"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the difference between A3C and A2C?",
+        "expected_keywords": ["A3C", "A2C", "asynchronous", "synchronous"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is Proximal Policy Optimization (PPO)?",
+        "expected_keywords": ["PPO", "policy", "clipping", "stability"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "Why was PPO introduced?",
+        "expected_keywords": ["PPO", "unstable", "policy updates", "stability"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the clipped surrogate objective in PPO?",
+        "expected_keywords": ["clipped", "surrogate", "objective", "probability ratio"]
+    },
+
+    {
+        "subject": "reinforcement_learning",
+        "question": "What are eligibility traces?",
+        "expected_keywords": ["eligibility traces", "TD", "memory", "credit assignment"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is n-step TD prediction?",
+        "expected_keywords": ["n-step", "TD", "rewards", "bootstrapping"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "How does n-step TD bridge Monte Carlo and one-step TD?",
+        "expected_keywords": ["n-step", "Monte Carlo", "TD", "intermediate"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the forward view of TD(lambda)?",
+        "expected_keywords": ["forward view", "TD(lambda)", "n-step", "lambda"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the backward view of TD(lambda)?",
+        "expected_keywords": ["backward view", "eligibility trace", "TD error", "past states"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is the trace-decay parameter lambda?",
+        "expected_keywords": ["lambda", "trace-decay", "eligibility", "TD"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is Sarsa(lambda)?",
+        "expected_keywords": ["Sarsa(lambda)", "eligibility traces", "on-policy", "state-action"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is Watkins's Q(lambda)?",
+        "expected_keywords": ["Watkins", "Q(lambda)", "off-policy", "eligibility traces"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "Why are eligibility traces useful for temporal credit assignment?",
+        "expected_keywords": ["eligibility", "credit assignment", "past states", "TD error"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is transfer learning in reinforcement learning?",
+        "expected_keywords": ["transfer learning", "knowledge", "source", "target"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is direct transfer learning?",
+        "expected_keywords": ["direct transfer", "knowledge", "model", "policy"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is indirect transfer learning?",
+        "expected_keywords": ["indirect transfer", "knowledge", "source task", "target task"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is domain adaptation in reinforcement learning?",
+        "expected_keywords": ["domain adaptation", "source", "target", "domain"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is multi-task reinforcement learning?",
+        "expected_keywords": ["multi-task", "multiple tasks", "shared knowledge", "generalization"]
+    },
+    {
+        "subject": "reinforcement_learning",
+        "question": "What is Sim-to-Real transfer learning?",
+        "expected_keywords": ["Sim-to-Real", "simulation", "real environment", "policy"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is software?",
+        "expected_keywords": ["software", "programming code", "libraries", "data"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is software engineering?",
+        "expected_keywords": ["software engineering", "engineering", "development", "software"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is the IEEE definition of software engineering?",
+        "expected_keywords": ["IEEE", "software engineering", "systematic", "disciplined"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What are the main characteristics of software?",
+        "expected_keywords": ["engineered", "does not wear out", "complex"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "Why is software engineered and not manufactured in the classical sense?",
+        "expected_keywords": ["engineered", "manufactured", "development", "people"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "Why does software not wear out?",
+        "expected_keywords": ["wear out", "defects", "failure", "maintenance"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What are the major software application domains?",
+        "expected_keywords": ["system software", "application software", "embedded", "web", "AI"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is system software?",
+        "expected_keywords": ["system software", "hardware", "resource sharing", "operating system"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is embedded software?",
+        "expected_keywords": ["embedded software", "product", "system", "control"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is AI software?",
+        "expected_keywords": ["artificial intelligence", "non-numerical", "complex problems", "robotics"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What are software engineering layers?",
+        "expected_keywords": ["quality", "process", "methods", "tools"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What are the principles of software engineering practice?",
+        "expected_keywords": ["practice", "communication", "planning", "modelling", "construction"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What are software myths?",
+        "expected_keywords": ["software myths", "beliefs", "software process", "reality"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is a software process?",
+        "expected_keywords": ["process", "activities", "actions", "tasks", "work product"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is a software process framework?",
+        "expected_keywords": ["process framework", "activities", "software projects", "foundation"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What are the five framework activities in the generic process model?",
+        "expected_keywords": ["communication", "planning", "modelling", "construction", "deployment"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What are umbrella activities in software engineering?",
+        "expected_keywords": ["risk management", "quality assurance", "technical reviews", "configuration management"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is a process pattern?",
+        "expected_keywords": ["process pattern", "problem", "software process", "solution"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is process assessment and improvement?",
+        "expected_keywords": ["process assessment", "improvement", "software process", "evaluation"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What factors influence the choice of a software process?",
+        "expected_keywords": ["project requirements", "project size", "complexity", "cost", "customer involvement"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is the Software Development Life Cycle (SDLC)?",
+        "expected_keywords": ["SDLC", "software development", "life cycle", "process"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is the Waterfall model?",
+        "expected_keywords": ["Waterfall", "sequential", "phases", "requirements", "design"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is the V-Model?",
+        "expected_keywords": ["V-Model", "verification", "validation", "testing"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is the Iterative model?",
+        "expected_keywords": ["iterative", "iterations", "incremental", "feedback"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is the Spiral model?",
+        "expected_keywords": ["Spiral", "risk-driven", "iterations", "risk analysis"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is Rapid Application Development (RAD)?",
+        "expected_keywords": ["RAD", "rapid", "development", "software"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is Agile methodology?",
+        "expected_keywords": ["Agile", "iterative", "incremental", "customer", "feedback"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What are important human factors in Agile software development?",
+        "expected_keywords": ["competence", "collaboration", "mutual trust", "self-organization"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is Scrum?",
+        "expected_keywords": ["Scrum", "Agile", "sprint", "team"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is requirements engineering?",
+        "expected_keywords": ["requirements engineering", "user expectations", "customer", "requirements"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "Why is requirements engineering important?",
+        "expected_keywords": ["customer", "analysis", "negotiation", "specification", "validation"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is a functional requirement?",
+        "expected_keywords": ["functional requirement", "system must do", "functionality", "user"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is a non-functional requirement?",
+        "expected_keywords": ["non-functional", "performance", "quality", "system shall"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is the difference between functional and non-functional requirements?",
+        "expected_keywords": ["functional", "non-functional", "functionality", "performance"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What are the stages of requirements engineering?",
+        "expected_keywords": ["inception", "elicitation", "elaboration", "negotiation", "specification"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is requirements elicitation?",
+        "expected_keywords": ["elicitation", "requirements", "customer", "scope", "understanding"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is requirements negotiation?",
+        "expected_keywords": ["negotiation", "conflict", "priority", "stakeholders", "satisfaction"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is an SRS document?",
+        "expected_keywords": ["SRS", "software requirements specification", "requirements", "document"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is a use case?",
+        "expected_keywords": ["use case", "actor", "goal", "scenario", "system"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is scenario-based modelling?",
+        "expected_keywords": ["scenario", "modelling", "use case", "actor"]
+    },
+
+    {
+        "subject": "software_engineering",
+        "question": "What is software measurement?",
+        "expected_keywords": ["measurement", "measure", "quantitative", "attribute"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is a software metric?",
+        "expected_keywords": ["metric", "quantitative", "attribute", "software quality"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is the difference between measurement, measure, and metric?",
+        "expected_keywords": ["measurement", "measure", "metric", "quantitative"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "Why are software metrics used?",
+        "expected_keywords": ["performance", "productivity", "debugging", "defect detection", "cost"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is Lines of Code (LOC)?",
+        "expected_keywords": ["LOC", "Lines of Code", "size", "productivity"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "How is productivity calculated using LOC?",
+        "expected_keywords": ["KLOC", "effort", "productivity", "person-months"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What are Halstead software metrics?",
+        "expected_keywords": ["Halstead", "operators", "operands", "length", "volume"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is Halstead program length?",
+        "expected_keywords": ["program length", "N", "operators", "operands"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is Halstead vocabulary?",
+        "expected_keywords": ["vocabulary", "n", "unique operators", "unique operands"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is Halstead volume?",
+        "expected_keywords": ["volume", "N", "log", "vocabulary"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is cyclomatic complexity?",
+        "expected_keywords": ["cyclomatic complexity", "decisions", "independent paths", "logical complexity"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "Why is cyclomatic complexity important?",
+        "expected_keywords": ["software quality", "testability", "maintainability", "independent paths"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is a control flow graph?",
+        "expected_keywords": ["control flow graph", "nodes", "edges", "control flow"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What do nodes and edges represent in a control flow graph?",
+        "expected_keywords": ["nodes", "code", "edges", "control flow transfers"]
+    },
+
+    {
+        "subject": "software_engineering",
+        "question": "What is software testing?",
+        "expected_keywords": ["testing", "software system", "specification", "environment"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is verification in software testing?",
+        "expected_keywords": ["verification", "work-products", "requirements", "reviews"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is validation in software testing?",
+        "expected_keywords": ["validation", "final product", "user needs", "system testing"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is the difference between verification and validation?",
+        "expected_keywords": ["verification", "validation", "built correctly", "right product"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is a test plan?",
+        "expected_keywords": ["test plan", "test objectives", "schedule", "test cases", "procedure"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "Why is it impossible to completely test a nontrivial software system?",
+        "expected_keywords": ["complete testing", "halting problem", "time", "cost"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is unit testing?",
+        "expected_keywords": ["unit testing", "subsystem", "developers", "functionality"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is integration testing?",
+        "expected_keywords": ["integration testing", "subsystems", "interfaces", "developers"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is system testing?",
+        "expected_keywords": ["system testing", "entire system", "requirements", "functionality"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is acceptance testing?",
+        "expected_keywords": ["acceptance testing", "client", "customer requirements", "ready to use"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What are the major testing strategies for web applications?",
+        "expected_keywords": ["functional", "usability", "performance", "security", "compatibility"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is white box testing?",
+        "expected_keywords": ["white box", "internal structure", "code", "control flow"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is basis path testing?",
+        "expected_keywords": ["basis path", "independent paths", "control flow", "testing"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is black box testing?",
+        "expected_keywords": ["black box", "input", "output", "functionality"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is equivalence partitioning?",
+        "expected_keywords": ["equivalence partitioning", "equivalence classes", "valid", "invalid"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is boundary value analysis?",
+        "expected_keywords": ["boundary value analysis", "minimum", "maximum", "nominal"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What values are selected in boundary value analysis?",
+        "expected_keywords": ["minimum", "just above minimum", "nominal", "just below maximum", "maximum"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is the single fault assumption in boundary value analysis?",
+        "expected_keywords": ["single fault", "nominal values", "one variable", "extreme values"]
+    },
+
+    {
+        "subject": "software_engineering",
+        "question": "What is a design pattern?",
+        "expected_keywords": ["design pattern", "recurring problem", "solution", "design structure"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "Why are design patterns studied?",
+        "expected_keywords": ["reuse", "proven solutions", "common terminology", "head start"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What are the main elements of a pattern?",
+        "expected_keywords": ["context", "problem", "solution", "forces"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What are the major categories of software patterns?",
+        "expected_keywords": ["architectural patterns", "design patterns", "idioms"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is an architectural pattern?",
+        "expected_keywords": ["architectural pattern", "system structure", "subtasks", "abstraction"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is the Layers architectural pattern?",
+        "expected_keywords": ["Layers", "subtasks", "abstraction", "layers"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What are the advantages of the Layers pattern?",
+        "expected_keywords": ["development", "incremental testing", "abstraction", "implementation"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is the Pipes and Filters architectural pattern?",
+        "expected_keywords": ["Pipes", "Filters", "data stream", "processing", "pipeline"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What are sources, filters, and sinks in the Pipes and Filters pattern?",
+        "expected_keywords": ["source", "filter", "sink", "data", "pipeline"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is the difference between active and passive components in Pipes and Filters?",
+        "expected_keywords": ["active", "passive", "thread", "invoked"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is the Model-View-Controller (MVC) pattern?",
+        "expected_keywords": ["MVC", "Model", "View", "Controller"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is the role of the Model in MVC?",
+        "expected_keywords": ["Model", "data", "logic"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is the role of the Controller in MVC?",
+        "expected_keywords": ["Controller", "interface", "Model", "View"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is the Proxy pattern?",
+        "expected_keywords": ["Proxy", "structural", "substitute", "access"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What are the different variants of the Proxy pattern?",
+        "expected_keywords": ["Remote Proxy", "Protection Proxy", "Cache Proxy", "Virtual Proxy"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is the Publisher-Subscriber pattern?",
+        "expected_keywords": ["Publisher", "Subscriber", "subscription", "notification", "events"]
+    },
+
+    {
+        "subject": "software_engineering",
+        "question": "What is the main goal of software project management?",
+        "expected_keywords": ["software project management", "developers", "effectively", "successful completion"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What are the major types of management in a software project?",
+        "expected_keywords": ["conflict", "risk", "requirement", "change", "configuration", "release"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is conflict management?",
+        "expected_keywords": ["conflict management", "negative features", "positive features", "group results"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is risk management?",
+        "expected_keywords": ["risk management", "identify risks", "resources", "minimize", "control"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is requirement management?",
+        "expected_keywords": ["requirement management", "analyzing", "prioritizing", "tracking", "documenting"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is change management?",
+        "expected_keywords": ["change management", "transition", "transformation", "control", "adapt"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is software configuration management?",
+        "expected_keywords": ["configuration management", "tracking changes", "revision control", "baselines"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is release management?",
+        "expected_keywords": ["release management", "planning", "controlling", "scheduling", "deployment"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What are the major aspects of software project management?",
+        "expected_keywords": ["planning", "leading", "execution", "time management", "budget", "maintenance"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is project planning in software project management?",
+        "expected_keywords": ["planning", "scope", "resources", "timelines", "testing", "maintenance"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is the role of leadership in software project management?",
+        "expected_keywords": ["leading", "team", "communication", "interpersonal", "leadership"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is execution in software project management?",
+        "expected_keywords": ["execution", "progress", "monitoring", "status reports", "project stages"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "Why is time management important in software projects?",
+        "expected_keywords": ["time management", "timeline", "deliverables", "changes", "risk"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is budget management in a software project?",
+        "expected_keywords": ["budget", "spending", "funds", "cost", "project manager"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What is the role of maintenance in software project management?",
+        "expected_keywords": ["maintenance", "testing", "defects", "client", "product"]
+    },
+    {
+        "subject": "software_engineering",
+        "question": "What are the drawbacks of software project management?",
+        "expected_keywords": ["high cost", "complexity", "communication overhead", "lack of originality"]
+    }
+]

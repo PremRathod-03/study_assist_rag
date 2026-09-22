@@ -1,0 +1,50 @@
+[
+  {
+    "question": "What is reinforcement learning?",
+    "subject": "reinforcement_learning",
+    "baseline_score": "3/4",
+    "agent_score": "4/4",
+    "baseline_answer": "Reinforcement learning is a type of machine\u2011learning technique in which a computer agent learns to perform a task by repeated **trial\u2011and\u2011error** interactions with a dynamic environment.  The agent makes a series of decisions that aim to **maximize a reward metric** for the task, using the rewards (and penalties) it receives as guidance, all without human intervention or explicit programming for the specific task.  It is framed around core concepts such as the policy, reward, value functions, and the RL loop, and is positioned within the broader machine\u2011learning landscape while highlighting its practical applications.",
+    "agent_answer": "Reinforcement learning is a machine\u2011learning technique in which a computer agent learns to perform a task by repeatedly interacting with a dynamic environment through trial and error. The agent makes a sequence of decisions that are guided by a reward metric, aiming to maximize that reward without human intervention or explicit programming of the desired behavior."
+  },
+  {
+    "question": "What are the main elements of reinforcement learning?",
+    "subject": "reinforcement_learning",
+    "baseline_score": "5/5",
+    "agent_score": "5/5",
+    "baseline_answer": "The main elements of reinforcement learning are:\n\n* **Policy** \u2013 the mapping from states to actions that the agent follows.  \n* **Reward** \u2013 the scalar signal received after taking an action, used to evaluate performance.  \n* **Value functions** \u2013 estimates of expected returns (future rewards) for states or state\u2011action pairs.  \n* **Agents, states, and actions** \u2013 the agent interacts with an environment by observing states, choosing actions, and receiving rewards.  \n* **The RL loop** \u2013 the cycle of sensing a state, selecting an action, receiving a reward, and updating the policy/value estimates.",
+    "agent_answer": "The main elements of reinforcement learning are:\n\n1. **Agent** \u2013 the learner or decision maker that interacts with the environment.  \n2. **Environment** \u2013 everything the agent operates in, providing states and feedback.  \n3. **Policy** \u2013 a mapping (or strategy) that tells the agent which action to take in each state.  \n4. **Reward** \u2013 a scalar signal from the environment that evaluates the agent\u2019s actions.  \n5. **Value Function** \u2013 a function that estimates the expected return (cumulative future reward) from states or state\u2013action pairs.  \n\nThese components together form the RL loop, where the agent observes a state, selects an action according to its policy, receives a reward and next state from the environment, and updates its value function and policy accordingly."
+  },
+  {
+    "question": "What is a policy in reinforcement learning?",
+    "subject": "reinforcement_learning",
+    "baseline_score": "3/4",
+    "agent_score": "4/4",
+    "baseline_answer": "A policy in reinforcement learning is the agent\u2019s behavior rule\u2014it maps perceived states of the environment to the actions that the agent should take in those states. In notation, a policy is written as\u202f\u03c0(s)\u202f\u2192\u202fa, meaning \u201cwhen in state\u202fs, do action\u202fa.\u201d It can be a simple lookup table or a complex computation, and it is the function that the agent uses to decide what to do at each step.",
+    "agent_answer": "A policy in reinforcement learning is the agent\u2019s way of behaving at any given time. It is a mapping from perceived states of the environment to the actions the agent should take when in those states. In notation, a policy is often written as\u202f\u03c0, where\u202f\u03c0(s)\u202f\u2192\u202fa indicates \u201cwhen in state\u202fs, take action\u202fa.\u201d The policy can be a simple function or lookup table, or it may involve more complex computation such as a search process."
+  },
+  {
+    "question": "What is a reward signal?",
+    "subject": "reinforcement_learning",
+    "baseline_score": "2/4",
+    "agent_score": "2/4",
+    "baseline_answer": "A reward signal is the single number the environment sends to the reinforcement learning agent at each time step. It indicates the goodness of the transition that just occurred, serving as the primary, environment\u2011provided signal that the agent uses to learn to maximize the total reward it receives over the long run.",
+    "agent_answer": "A reward signal is the single numeric value that the environment sends to a reinforcement\u2011learning agent at each time step. It indicates the goodness of the transition that just occurred (i.e., the state change and action taken), and it defines which events are good or bad for the agent. The agent\u2019s objective is to maximize the sum of these reward signals over time."
+  },
+  {
+    "question": "What is a value function?",
+    "subject": "reinforcement_learning",
+    "baseline_score": "2/4",
+    "agent_score": "2/4",
+    "baseline_answer": "A value function is a function that **estimates how good a state (or a state\u2013action pair) is in the long run**. It predicts the total amount of reward an agent can expect to accumulate over the future, starting from that state (or after taking that action). The value of a state is denoted \\(V(s)\\) and the value of a state\u2011action pair is denoted \\(Q(s,a)\\).",
+    "agent_answer": "A value function is a way of estimating how good a state (or a state\u2011action pair) is in the long run. It predicts the total amount of reward an agent can expect to accumulate over the future, starting from that state. In RL we usually refer to two types: the state\u2011value function **V(s)** and the action\u2011value (Q\u2011value) function **Q(s,a)**. The value function therefore gives a long\u2011term expectation of reward, as opposed to the immediate feedback provided by the reward signal."
+  },
+  {
+    "question": "What is the difference between a reward and a value function?",
+    "subject": "reinforcement_learning",
+    "baseline_score": "3/4",
+    "agent_score": "3/4",
+    "baseline_answer": "In RL, a **reward** is the immediate numeric signal the agent receives after a transition \u2013 it tells the agent how good that particular step was.  \nA **value function** (V(s) for states or Q(s,a) for state\u2011action pairs) is a prediction of the *total expected future reward* the agent can accumulate from that state or state\u2011action pair onward. Thus, rewards give instant feedback, while value functions estimate long\u2011term desirability based on future rewards.",
+    "agent_answer": "Rewards and value functions serve distinct roles in reinforcement learning, as described in the provided context.\n\n| Aspect | Reward | Value Function |\n|--------|--------|----------------|\n| **What it provides** | Immediate feedback after an action | Long\u2011term estimate of how good a state or state\u2011action pair is |\n| **Primary vs. Secondary** | Primary \u2013 directly given by the environment | Secondary \u2013 a prediction derived from rewards |\n| **Time perspective** | Short\u2011term (instant) | Long\u2011term (future\u2011oriented) |\n| **Guidance** | Guides instant reaction | Guides planning and decision\u2011making |\n| **Dependency** | Depends only on current action and state | Depends on future rewards and the policy |\n\nIn short, a reward tells the agent how good an action was right now, while a value function estimates the expected future returns (total future rewards) that will accrue from a particular state or from taking a particular action in a state."
+  }
+]

@@ -1,21 +1,15 @@
-import os
-from groq import Groq
-from dotenv import load_dotenv
-import chromadb
-from chromadb.utils import embedding_functions
-
 from app.config import EXAM_BLUEPRINTS
 from app.retrieval.hybrid import hybrid_search
-from app.retrieval.rerank import rerank
-
-load_dotenv()
-client = Groq(api_key=os.environ["GROQ_API_KEY"])
-MODEL = "openai/gpt-oss-20b"
+from app.groq_pool import call_with_pool, estimate_tokens
+from app.usage_tracker import log_usage
+import chromadb
+from chromadb.utils import embedding_functions
 
 embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(
     model_name="BAAI/bge-small-en-v1.5"
 )
 chroma_client = chromadb.PersistentClient(path="vectorstore")
+MODEL = "openai/gpt-oss-20b"
 
 
 def generate_paper(subject: str, exam_type: str) -> str:
@@ -32,13 +26,11 @@ def generate_paper(subject: str, exam_type: str) -> str:
         name=subject, embedding_function=embedding_function
     )
 
-    # Pull a broad sample of notes content to base questions on
     query = f"{subject} key concepts and topics"
     candidate_ids = hybrid_search(subject, query, notes_collection, top_k=15)
     notes_sample = notes_collection.get(ids=candidate_ids)["documents"]
     notes_context = "\n\n".join(notes_sample)
 
-    # Try to also pull PYQs for this subject, if that collection exists
     pyq_context = ""
     try:
         pyq_collection = chroma_client.get_collection(
@@ -47,8 +39,6 @@ def generate_paper(subject: str, exam_type: str) -> str:
         pyq_sample = pyq_collection.get(limit=10)["documents"]
         pyq_context = "\n\n".join(pyq_sample)
     except Exception:
-        # No PYQs ingested yet for this subject - that's fine, we just
-        # won't have a real style example to match against.
         pass
 
     style_instruction = (
@@ -58,18 +48,20 @@ def generate_paper(subject: str, exam_type: str) -> str:
     )
 
     prompt = f"""Generate a {exam_type} question paper for {subject}.
-Total marks: {blueprint['total_marks']}. Cover {blueprint['num_units_covered']} units/topics.
+Total marks: {blueprint['total_marks']}.
 
 {style_instruction}
 
 Base the question content on this syllabus material:
 {notes_context}"""
 
-    response = client.chat.completions.create(
-        model=MODEL,
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=1500,
+    response = call_with_pool(
+        lambda c: c.chat.completions.create(
+            model=MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=2000,
+        ),
+        estimate_tokens(prompt) + 2000,
     )
-    from app.usage_tracker import log_usage
     log_usage(subject, "generate_paper", response.usage.prompt_tokens, response.usage.completion_tokens)
     return response.choices[0].message.content.strip()

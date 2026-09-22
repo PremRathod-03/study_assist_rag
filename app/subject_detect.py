@@ -1,10 +1,6 @@
-import os
 import difflib
-from groq import Groq
-from dotenv import load_dotenv
+from app.groq_pool import call_with_pool, estimate_tokens
 
-load_dotenv()
-client = Groq(api_key=os.environ["GROQ_API_KEY"])
 MODEL = "openai/gpt-oss-20b"
 
 
@@ -15,10 +11,9 @@ def detect_subject(file_text: str, existing_subjects: list[str]) -> str:
     inventing a new one.
 
     Uses fuzzy string matching as a safety net: the LLM's raw guess
-    might not exactly match an existing subject's string (e.g. it says
-    "reinforcement_learning_notes" instead of "reinforcement_learning"),
-    so we snap close guesses to the real existing name rather than
-    treating near-matches as brand new subjects.
+    might not exactly match an existing subject's string, so we snap
+    close guesses to the real existing name rather than treating
+    near-matches as brand new subjects.
     """
     existing_list = ", ".join(existing_subjects) if existing_subjects else "(none yet)"
 
@@ -36,17 +31,17 @@ lowercase_underscore format (e.g. "big_data_analytics").
 
 Respond with ONLY the subject name, nothing else."""
 
-    response = client.chat.completions.create(
-        model=MODEL,
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=500,
+    response = call_with_pool(
+        lambda c: c.chat.completions.create(
+            model=MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=500,
+        ),
+        estimate_tokens(prompt) + 500,
     )
     raw_guess = response.choices[0].message.content.strip().lower()
     raw_guess = raw_guess.replace(" ", "_").strip('"').strip("'")
 
-    # Fuzzy-match safety net: if the raw guess is close enough to an
-    # existing subject, use the REAL existing name instead of the LLM's
-    # possibly-slightly-off version of it.
     if existing_subjects:
         close_matches = difflib.get_close_matches(raw_guess, existing_subjects, n=1, cutoff=0.6)
         if close_matches:
