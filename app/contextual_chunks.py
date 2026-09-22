@@ -1,4 +1,4 @@
-from app.groq_pool import get_client_with_capacity, record_usage, estimate_tokens
+from app.groq_pool import call_with_pool, estimate_tokens
 from app.usage_tracker import log_usage
 
 
@@ -9,8 +9,8 @@ def add_context(full_document_text: str, chunk_text: str) -> str:
     within the document - so the chunk makes sense retrieved on its own,
     without needing the surrounding text around it.
 
-    Uses a pool of Groq API keys (see app/groq_pool.py) so multiple
-    accounts' rate limits combine into one larger effective budget.
+    Uses a pool of Groq API keys (see app/groq_pool.py) that
+    automatically routes around any key that hits its daily limit.
 
     Returns the chunk with that blurb stuck in front of it.
     """
@@ -29,15 +29,16 @@ overall document, to help it be understood correctly when retrieved on
 its own later. Answer with ONLY the blurb, nothing else."""
 
     estimated = estimate_tokens(prompt) + 400
-    client, key_index = get_client_with_capacity(estimated)
 
-    response = client.chat.completions.create(
-        model="openai/gpt-oss-20b",
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=400,
+    response = call_with_pool(
+        lambda client: client.chat.completions.create(
+            model="openai/gpt-oss-20b",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=400,
+        ),
+        estimated,
     )
 
-    record_usage(key_index, response.usage.total_tokens)
     log_usage("_enrichment", "enrich_chunk", response.usage.prompt_tokens, response.usage.completion_tokens)
 
     context_blurb = response.choices[0].message.content.strip()
